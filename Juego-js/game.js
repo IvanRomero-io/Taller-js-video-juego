@@ -41,20 +41,32 @@ function startGame(){
     game.textAlign = "end" //Este metodo es para que lon que ingreses empiece o termine justamente donde le mandas la ubicacion en el fill, por ejemplo, si pones una ubicacion 25, 25... no va a centrarce en esa ubicacion, va es a empezar justo alli, o terminar hasta alli.o otras como "center" que esa si lo centra en un punto justo de las hubicaciones
     // game.fillText("Prueba", 0, 25)
 
-    const mapRows = maps[0].trim().split("\n")
-
+    const map = maps[0]
+    const mapRows = map.trim().split("\n")
     const mapRowsSinEspacios = mapRows.map((row) => row.trim().split(''))
 
     console.log(mapRows, mapRowsSinEspacios )
+    //si con un ForEach recibe un segundo parametro. este regresa la ubicacion en el index de ese elemento
+    mapRowsSinEspacios.forEach((row, rowI) => {
+        row.forEach((col, colI) => {
+            let emoji = emojis[col]
+            let posX = elementsSize * (colI + 1)
+            let posY = (elementsSize * (rowI + 1) - 10)
+            console.log({col, colI, row, rowI, emoji})
+            game.fillText(emoji, posX, posY)
+        
+        })
 
+            
+    });
 
-for(let y = 1;  y < 11 ; y++){ 
-    // console.log({y})
-    for (let x = 1; x < 11 ; x++) {
-        game.fillText(emojis[mapRowsSinEspacios[y - 1][x - 1]], elementsSize * x , elementsSize * y - 10)
-        // console.log({elementsSize, x})
-    }
-}
+//     for(let y = 1;  y < 11 ; y++){ 
+//         // console.log({y})
+//         for (let x = 1; x < 11 ; x++) {
+//             game.fillText(emojis[mapRowsSinEspacios[y - 1][x - 1]], elementsSize * x , elementsSize * y - 10)
+//             // console.log({elementsSize, x})
+//         }
+// }
     //  game.fillRect(0, 5, 100, 100)
     //  game.clearRect(0, 0, 50, 50)
     //  game.clearRect(50, 50, 100, 100)

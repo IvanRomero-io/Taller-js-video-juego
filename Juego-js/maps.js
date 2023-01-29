@@ -14,7 +14,7 @@ maps.push(`
 `);
 maps.push(`
   O--XXXXXXX
-  X--XXXXXXX z
+  X--XXXXXXX 
   XX----XXXX
   X--XX-XXXX
   X-XXX--XXX
