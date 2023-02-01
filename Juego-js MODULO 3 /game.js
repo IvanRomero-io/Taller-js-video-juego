@@ -45,12 +45,16 @@ function startGame(){
     game.textAlign = "end"
 
     const map = maps[level]
+    if(!map){
+       gameWin() 
+       return
+    }
+
     const mapRows = map.trim().split("\n")
-   
     const mapRowsSinEspacios = mapRows.map((row) => row.trim().split(''))
     // console.log(mapRows, mapRowsSinEspacios )
 
-    
+
     //si con un ForEach recibe un segundo parametro. este regresa la ubicacion en el index de ese elemento
     enemiesPosition = []
     game.clearRect(0, 0, canvasSize, canvasSize)
@@ -129,6 +133,10 @@ function levelWin(){
     console.log("subiste de nivel")
     level++
     return startGame()
+}
+
+function gameWin(){
+    console.log("Superaste el juego")
 }
 
 function moveUp(){
