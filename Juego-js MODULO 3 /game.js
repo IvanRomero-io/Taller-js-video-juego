@@ -3,6 +3,7 @@ const game = canvas.getContext('2d')
 let canvasSize //Cree una variable que un if le dara un valor, esta variable es para el tamaño del canvas
 let elementsSize
 let level = 0
+let lives = 3
 
 const playerPosition = {x: undefined, y: undefined}
 const giftPosition = {x: undefined, y: undefined}
@@ -72,7 +73,7 @@ function startGame(){
             else if (col === 'I'){
                 giftPosition.x = posX
                 giftPosition.y = posY
-                console.log({giftPosition})
+                // console.log({giftPosition})
             }
             else if (col === 'X'){
                 enemiesPosition.push({col, positionX: posX, positionY: posY})
@@ -124,7 +125,7 @@ function movePlayer(){
 
 
     if(enemyCollision){
-        console.log("colision con enemigo")
+        levelFail()
     }
 
 }
@@ -133,6 +134,19 @@ function levelWin(){
     console.log("subiste de nivel")
     level++
     return startGame()
+}
+
+function levelFail(){
+    console.log('Chocaste con un enemigo :(')
+    playerPosition.x = undefined
+    playerPosition.y = undefined
+    lives--
+    if(lives <= 0){
+       level = 0
+       lives = 3
+    }
+    startGame()
+    
 }
 
 function gameWin(){
