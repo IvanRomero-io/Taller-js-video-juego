@@ -47,7 +47,7 @@ function startGame(){
 
     const map = maps[level]
     if(!map){
-       gameWin() 
+       gameWin()
        return
     }
 
@@ -59,6 +59,7 @@ function startGame(){
     //si con un ForEach recibe un segundo parametro. este regresa la ubicacion en el index de ese elemento
     enemiesPosition = []
     game.clearRect(0, 0, canvasSize, canvasSize)
+    showLives()
     mapRowsSinEspacios.forEach((row, rowI) => {
         row.forEach((col, colI) => {
             let emoji = emojis[col]
@@ -86,7 +87,7 @@ function startGame(){
             game.fillText(emojis["PLAYER"], playerPosition.x, playerPosition.y)
 
         })
-       
+
     });
     // console.log(enemiesPosition)
    movePlayer()
@@ -97,6 +98,7 @@ const btnUp = document.getElementById('up')
 const btnRight = document.getElementById('right')
 const btnLeft = document.getElementById('left')
 const btnDown = document.getElementById('down')
+const spanLives = document.getElementById('lives')
 
 btnUp.addEventListener('click', moveUp)
 btnRight.addEventListener('click', moveRight)
@@ -145,12 +147,18 @@ function levelFail(){
        level = 0
        lives = 3
     }
+
+
     startGame()
-    
+
 }
 
 function gameWin(){
     console.log("Superaste el juego")
+    level = 0
+    playerPosition.x = undefined
+    playerPosition.y = undefined
+    startGame()
 }
 
 function moveUp(){
@@ -162,19 +170,19 @@ function moveUp(){
         startGame()
     }
 
-    
+
 }
 
 function moveRight(){
     // console.log('Derecha')
-   
+
     if((playerPosition.x + elementsSize) > canvasSize){
         console.log("limite")
     } else{
         playerPosition.x = playerPosition.x + elementsSize
         startGame()
     }
-    
+
 }
 
 function moveLeft(){
@@ -196,7 +204,7 @@ function moveDown(){
         playerPosition.y = playerPosition.y + elementsSize
         startGame()
     }
-    
+
 }
 
 function moveByKeys(event){
@@ -220,3 +228,20 @@ function moveByKeys(event){
 
 }
 
+/////////////Utilidades visuales (vidas, tiempo, etc )
+
+function showLives(){
+    //Esto es interesante, el metodo "Array" con a mayuscula te permite crear un array que le puedes decir cuantas posiciones quieres y despues con el metodo fill, la llenas de lo que le pediste
+    let corazonesArray = Array(lives).fill(emojis['h'])
+    // console.log(corazones)
+    // let corazones = ""
+    
+    spanLives.innerHTML = ""
+    corazonesArray.forEach(corazon => {
+        spanLives.append(corazon)
+        // corazones = corazones + corazon
+        // console.log(corazones)
+    } )
+    
+
+}
