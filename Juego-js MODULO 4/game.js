@@ -5,6 +5,10 @@ let elementsSize
 let level = 0
 let lives = 3
 
+let timeStart
+let timePlayer
+let timeInterval
+
 const playerPosition = {x: undefined, y: undefined}
 const giftPosition = {x: undefined, y: undefined}
 
@@ -50,6 +54,11 @@ function startGame(){
        gameWin()
        return
     }
+    if(!timeStart){
+        timeStart = Date.now()
+        timeInterval = setInterval(showTime, 100 )
+    }
+    console.log(timeStart)
 
     const mapRows = map.trim().split("\n")
     const mapRowsSinEspacios = mapRows.map((row) => row.trim().split(''))
@@ -99,6 +108,7 @@ const btnRight = document.getElementById('right')
 const btnLeft = document.getElementById('left')
 const btnDown = document.getElementById('down')
 const spanLives = document.getElementById('lives')
+const spanTime = document.getElementById('tiempo')
 
 btnUp.addEventListener('click', moveUp)
 btnRight.addEventListener('click', moveRight)
@@ -146,6 +156,7 @@ function levelFail(){
     if(lives <= 0){
        level = 0
        lives = 3
+       timeStart = undefined 
     }
 
 
@@ -158,7 +169,8 @@ function gameWin(){
     level = 0
     playerPosition.x = undefined
     playerPosition.y = undefined
-    startGame()
+    clearInterval(timeInterval)
+    // startGame()
 }
 
 function moveUp(){
@@ -245,3 +257,13 @@ function showLives(){
     
 
 }
+
+function showTime(){
+    spanTime.innerHTML = Date.now() - timeStart
+}
+
+//Apuntes de clases de intervalos: metodo "setInterval(() => elemento que se repita, Tiempo por ejecucion) ": sirve para repetir un elemento, variable etc, hasta que se lo limitemos con "clearInterval(argumento que queremos parar)" que lo para en seco...
+
+//Tambien tenemos a setTimeOut(() => (elemento para ejecutar), (tiempo en que lo va a ejecutar)) para ejecutar solo una ves un elemento cariable etc.
+
+//Hay un super prototipo/Funcion que se llama "Date", esto nos sirve para saber la ora en el momento cuando se le añade el ".now"
