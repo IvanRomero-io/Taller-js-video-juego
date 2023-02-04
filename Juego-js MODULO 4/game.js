@@ -253,7 +253,7 @@ function moveUp(){
 function moveRight(){
     // console.log('Derecha')
 
-    if((playerPosition.x + elementsSize) > canvasSize){
+    if((playerPosition.x + elementsSize).toFixed(0) > Number(canvasSize.toFixed(0))){
         console.log("limite")
     } else{
         playerPosition.x = playerPosition.x + elementsSize
@@ -264,7 +264,7 @@ function moveRight(){
 
 function moveLeft(){
     // console.log('Izquierda')
-    if((playerPosition.x - elementsSize) < elementsSize){
+    if((playerPosition.x - elementsSize).toFixed(0) < Number(elementsSize.toFixed(0))){
         console.log("limite")
     } else{
         playerPosition.x = playerPosition.x - elementsSize
