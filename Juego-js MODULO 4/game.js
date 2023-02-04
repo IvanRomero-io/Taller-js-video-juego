@@ -13,32 +13,67 @@ const playerPosition = {x: undefined, y: undefined}
 const giftPosition = {x: undefined, y: undefined}
 
 let enemiesPosition = []
-
+let resizeElementXandY
+let arrayUltimoCanvasSize =[]
 
 
 window.addEventListener('load', setCanvasSize)
-window.addEventListener('resize', setCanvasSize)
+window.addEventListener('resize', resize)
+
+
+function resize(){
+    if(window.innerHeight > window.innerWidth){
+        canvasSize = window.innerWidth * 0.7
+
+        //si el alto de la pagina es mas grande que el ancho, el canvas solo va a tomar el 80% del ancho
+    }else if (window.innerHeight < window.innerWidth){
+        canvasSize = window.innerHeight * 0.7
+
+          //si el ancho de la pagina es mas grande que el alto, el canvas solo va a tomar el 80% del alto
+    }
+
+    canvasSize = Number(canvasSize.toFixed(0))
+
+    playerPosition.x = (canvasSize * playerPosition.x) / arrayUltimoCanvasSize[arrayUltimoCanvasSize.length - 1]
+    playerPosition.y = (canvasSize * playerPosition.y) / arrayUltimoCanvasSize[arrayUltimoCanvasSize.length - 1]
+
+    // console.log(playerPosition.x, playerPosition.y)
+    setCanvasSize()
+}
+
 
 function setCanvasSize(){
 
     if(window.innerHeight > window.innerWidth){
-        canvasSize = window.innerWidth * 0.8
+        canvasSize = window.innerWidth * 0.7
 
         //si el alto de la pagina es mas grande que el ancho, el canvas solo va a tomar el 80% del ancho
     }else if (window.innerHeight < window.innerWidth){
-        canvasSize = window.innerHeight * 0.8
+        canvasSize = window.innerHeight * 0.7
 
           //si el ancho de la pagina es mas grande que el alto, el canvas solo va a tomar el 80% del alto
     }
+
+    canvasSize = Number(canvasSize.toFixed(0))
+    console.log(canvasSize)
 
     canvas.setAttribute('width', canvasSize)
     canvas.setAttribute('height', canvasSize)
 
     elementsSize = canvasSize / 10
 
- console.log({canvasSize, elementsSize})
+    // playerPosition.x = undefined
+    // playerPosition.y = undefined
+    
+    arrayUltimoCanvasSize.push(canvasSize)
+    // resizeElementPosition.push(elementsSize)
 
+    // if (resizeElementPosition){
+    //     let ultimoElementSize = resizeElementPosition[resizeElementPosition.length - 2]
+    //     console.log(ultimoElementSize)
+    // }
 
+  
     startGame()
 }
 
@@ -51,14 +86,15 @@ function startGame(){
 
     const map = maps[level]
     if(!map){
-       gameWin()
+       gameWinAndSetRecord()
        return
     }
     if(!timeStart){
         timeStart = Date.now()
         timeInterval = setInterval(showTime, 100 )
+        showRecord()
     }
-    console.log(timeStart)
+    // console.log(timeStart)
 
     const mapRows = map.trim().split("\n")
     const mapRowsSinEspacios = mapRows.map((row) => row.trim().split(''))
@@ -91,7 +127,7 @@ function startGame(){
 
             }
 
-
+            
             game.fillText(emoji, posX, posY)
             game.fillText(emojis["PLAYER"], playerPosition.x, playerPosition.y)
 
@@ -99,6 +135,8 @@ function startGame(){
 
     });
     // console.log(enemiesPosition)
+    let tempUltimaPosiciones = [playerPosition.x, playerPosition.y]
+    resizeElementXandY = tempUltimaPosiciones
    movePlayer()
 }
 
@@ -109,6 +147,9 @@ const btnLeft = document.getElementById('left')
 const btnDown = document.getElementById('down')
 const spanLives = document.getElementById('lives')
 const spanTime = document.getElementById('tiempo')
+const spanRecord = document.getElementById('record')
+const pResult = document.getElementById('result')
+
 
 btnUp.addEventListener('click', moveUp)
 btnRight.addEventListener('click', moveRight)
@@ -126,7 +167,7 @@ function movePlayer(){
          levelWin()
     }
 
-    game.fillText(emojis["PLAYER"], playerPosition.x, playerPosition.y)
+    // game.fillText(emojis["PLAYER"], playerPosition.x, playerPosition.y)
 //    console.log(playerPosition.x, playerPosition.y)
 ///colicion bombas//
   const enemyCollision = enemiesPosition.find(enemy => {
@@ -164,18 +205,42 @@ function levelFail(){
 
 }
 
-function gameWin(){
+function gameWinAndSetRecord(){
     console.log("Superaste el juego")
     level = 0
     playerPosition.x = undefined
     playerPosition.y = undefined
     clearInterval(timeInterval)
+
+    const recordTime = localStorage.getItem('record_time') //Variable que nos trae una iformacion del local storaage
+    const playerTime = Date.now() - timeStart //Variable que nos trae el ultimo tiempo cuando ya se acabaron los niveles del juego, osea tu marca en la partida
+
+    //Revisa si ya existia un record y empieza a comparar
+    if(recordTime){
+        //Si el record en el localStorage es mayor, este lo sobre escribe
+        if(recordTime >= playerTime ){
+            localStorage.setItem('record_time', playerTime)
+            pResult.innerHTML = 'Haz superado el record ✨✨'
+        }
+        //Y si el tiempo en esta partida no es mayor al record ya impuesto en otras partidas, te avisa que no lo has roto
+        else{
+            pResult.innerHTML = 'lo siento, no has roto el record 💀'
+        }
+    }
+    //Si no habia un record en el localStorage, lo va a creear
+    else{
+        localStorage.setItem('record_time', playerTime)
+        pResult.innerHTML = 'Primer ingreso de tiempo ✍'
+    }
+
+    //Y aca te enseña en la consola el record anterior (si no existe es null), y el record de esta partida
+    console.log({recordTime, playerTime})
     // startGame()
 }
 
 function moveUp(){
     // console.log('Arriba')
-    if((playerPosition.y - elementsSize) < elementsSize){
+    if((playerPosition.y - elementsSize).toFixed(0) < Number(elementsSize.toFixed(0))){
         console.log("limite")
     } else{
        playerPosition.y = playerPosition.y - elementsSize
@@ -262,8 +327,8 @@ function showTime(){
     spanTime.innerHTML = Date.now() - timeStart
 }
 
-//Apuntes de clases de intervalos: metodo "setInterval(() => elemento que se repita, Tiempo por ejecucion) ": sirve para repetir un elemento, variable etc, hasta que se lo limitemos con "clearInterval(argumento que queremos parar)" que lo para en seco...
+function showRecord(){
+    spanRecord.innerHTML = localStorage.getItem('record_time')
+}
 
-//Tambien tenemos a setTimeOut(() => (elemento para ejecutar), (tiempo en que lo va a ejecutar)) para ejecutar solo una ves un elemento cariable etc.
-
-//Hay un super prototipo/Funcion que se llama "Date", esto nos sirve para saber la ora en el momento cuando se le añade el ".now"
+//Esta ves usaremos una herramiendo de navegadores que se llama el localStorage, que nos sirve para guardar informacion en el navegador y lo podamos usar de nuevo con su informacion guardada asi hallamos cerrado la pagina, usa 3 metodos (que conozco) como ".getItem" es para leer la informacio que este guardada , ".setItem" para guardar la informacion, variable etc, ".removeItem" saca la variable que se guardo
