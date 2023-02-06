@@ -1,5 +1,6 @@
 const canvas = document.querySelector("#game")
 const game = canvas.getContext('2d')
+const botonBorrarRecord = document.getElementById("botton-record")
 let canvasSize //Cree una variable que un if le dara un valor, esta variable es para el tamaño del canvas
 let elementsSize
 let level = 0
@@ -21,16 +22,19 @@ window.addEventListener('load', setCanvasSize)
 window.addEventListener('resize', resize)
 
 
+
 function resize(){
     if(window.innerHeight > window.innerWidth){
         canvasSize = window.innerWidth * 0.7
 
-        //si el alto de la pagina es mas grande que el ancho, el canvas solo va a tomar el 80% del ancho
+        //si el alto de la pagina es mas grande que el ancho, el canvas solo va a tomar el 70% del ancho
     }else if (window.innerHeight < window.innerWidth){
         canvasSize = window.innerHeight * 0.7
 
-          //si el ancho de la pagina es mas grande que el alto, el canvas solo va a tomar el 80% del alto
+          //si el ancho de la pagina es mas grande que el alto, el canvas solo va a tomar el 70% del alto
     }
+
+    // elementsSize = (canvasSize / 10) - 0.5
 
     canvasSize = Number(canvasSize.toFixed(0))
 
@@ -47,11 +51,11 @@ function setCanvasSize(){
     if(window.innerHeight > window.innerWidth){
         canvasSize = window.innerWidth * 0.7
 
-        //si el alto de la pagina es mas grande que el ancho, el canvas solo va a tomar el 80% del ancho
+        //si el alto de la pagina es mas grande que el ancho, el canvas solo va a tomar el 70% del ancho
     }else if (window.innerHeight < window.innerWidth){
         canvasSize = window.innerHeight * 0.7
 
-          //si el ancho de la pagina es mas grande que el alto, el canvas solo va a tomar el 80% del alto
+          //si el ancho de la pagina es mas grande que el alto, el canvas solo va a tomar el 70% del alto
     }
 
     canvasSize = Number(canvasSize.toFixed(0))
@@ -220,22 +224,23 @@ function gameWinAndSetRecord(){
         //Si el record en el localStorage es mayor, este lo sobre escribe
         if(recordTime >= playerTime ){
             localStorage.setItem('record_time', playerTime)
-            pResult.innerHTML = 'Haz superado el record ✨✨'
+            // pResult.innerHTML = 'Haz superado el record ✨✨'
         }
         //Y si el tiempo en esta partida no es mayor al record ya impuesto en otras partidas, te avisa que no lo has roto
         else{
-            pResult.innerHTML = 'lo siento, no has roto el record 💀'
+            // pResult.innerHTML = 'lo siento, no has roto el record 💀'
         }
     }
     //Si no habia un record en el localStorage, lo va a creear
     else{
         localStorage.setItem('record_time', playerTime)
-        pResult.innerHTML = 'Primer ingreso de tiempo ✍'
+        // pResult.innerHTML = 'Primer ingreso de tiempo ✍'
     }
 
     //Y aca te enseña en la consola el record anterior (si no existe es null), y el record de esta partida
     console.log({recordTime, playerTime})
     // startGame()
+    pantallaWin(playerTime, recordTime)
 }
 
 function moveUp(){
@@ -329,6 +334,12 @@ function showTime(){
 
 function showRecord(){
     spanRecord.innerHTML = localStorage.getItem('record_time')
+}
+
+botonBorrarRecord.addEventListener('click', borraRecord)
+function borraRecord(){
+     localStorage.removeItem('record_time')
+     pResult.innerHTML = "En la sigiente partida no habra <strong>Record</strong>"
 }
 
 //Esta ves usaremos una herramiendo de navegadores que se llama el localStorage, que nos sirve para guardar informacion en el navegador y lo podamos usar de nuevo con su informacion guardada asi hallamos cerrado la pagina, usa 3 metodos (que conozco) como ".getItem" es para leer la informacio que este guardada , ".setItem" para guardar la informacion, variable etc, ".removeItem" saca la variable que se guardo
